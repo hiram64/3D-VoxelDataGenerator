@@ -13,19 +13,19 @@ scipy, numpy
 
 ## How to use
 
-##### Load array data
+#### Load array data
 prepare your data in array form.
 ```
 data = np.load(path_to_data)
 ```
 
-##### Import module
+#### Import module
 import the following module in this repository.
 ```
 from voxel_data_generator import VoxelDataGenerator
 ```
 
-##### Create instance
+#### Create instance
 create an instance with argumentations to specify which type you want to augment by.
 ```
 # Some examples
@@ -43,7 +43,7 @@ c = VoxelDataGenerator(zoom_axis=1, zoom_range=1.5)
 c = VoxelDataGenerator(rotate_axis=1, rotate_angle=45)
 ```
 
-##### Build generator
+#### Build generator
 build a generator by specifying data to be augmented and the number of data to generate.
 
 ```
@@ -57,14 +57,14 @@ You can get MODELNET10 in the following website.
 PRINCETON MODELNET
 (http://modelnet.cs.princeton.edu/)
 
-##### Flip
+#### Flip
 <img src="img/flip.png">
 
-##### Shift
+#### Shift
 <img src="img/shift.png">
 
-##### Zoom
+#### Zoom
 <img src="img/expand.png">
 
-##### Rotate
+#### Rotate
 <img src="img/rotate.png">
