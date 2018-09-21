@@ -20,6 +20,7 @@ data = np.load(path_to_data)
 ```
 
 ##### Import module
+import the following module in this repository.
 ```
 from voxel_data_generator import VoxelDataGenerator
 ```
@@ -51,6 +52,11 @@ g = c.build(data=data, batch_size=3)
 ```
 
 ## Examples
+You can get MODELNET10 in the following website.
+
+PRINCETON MODELNET
+(http://modelnet.cs.princeton.edu/)
+
 ##### Flip
 <img src="img/flip.png">
 
