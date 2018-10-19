@@ -53,7 +53,7 @@ g = c.build(data=data, batch_size=32)
 # you can also take labels as the second argument and pass the generator to Keras's fit_generator
 g = c.build(data=data, label=label, batch_size=32)
 model.fit_generator(g, steps_per_epoch=50, epochs=30)
-# Note: as written in VoxelDataGenerator class, it is able to take only one type of augmentations for the current specification.
+# Note: as written in VoxelDataGenerator class, it is able to take only one type of augmentations limited by the current specification.
 ```
 
 ## Examples

@@ -36,7 +36,8 @@ def main(data, label):
 
 if __name__ == '__main__':
     # data load : here you need to load array data
-    data = np.load('../3D-Similarity-Search/data/modelnet10.npz')['X_train']
-    label = np.load('../3D-Similarity-Search/data/modelnet10.npz')['y_train']
+    all_data = np.load('./modelnet10.npz')
+    data = all_data['X_train']
+    label = all_data['y_train']
 
     main(data, label)
