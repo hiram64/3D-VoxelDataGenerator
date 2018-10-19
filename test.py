@@ -5,7 +5,7 @@ import numpy as np
 from voxel_data_generator import VoxelDataGenerator
 
 
-def main(data):
+def main(data, label):
     # flip
     c1 = VoxelDataGenerator(flip_axis=2)
     g1 = c1.build(data, batch_size=1)
@@ -29,9 +29,14 @@ def main(data):
 
     plt.show()
 
+    # take label as arugment. The generator returns data and label when it is called.
+    c5 = VoxelDataGenerator(flip_axis=1)
+    g5 = c5.build(data=data, label=label, batch_size=32)
+
 
 if __name__ == '__main__':
     # data load : here you need to load array data
-    data = np.load('./modelnet10.npz')
+    data = np.load('../3D-Similarity-Search/data/modelnet10.npz')['X_train']
+    label = np.load('../3D-Similarity-Search/data/modelnet10.npz')['y_train']
 
-    main(data)
+    main(data, label)

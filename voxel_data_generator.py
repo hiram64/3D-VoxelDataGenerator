@@ -57,6 +57,7 @@ class VoxelDataGenerator(object):
 
     def build(self,
               data=None,
+              label=None,
               batch_size=None):
         """
         Arguments:
@@ -64,18 +65,33 @@ class VoxelDataGenerator(object):
         data: array
             Input data to be augmented.
             The shape of input data should have 4 dimension(batch, x, y, z).
+        label(Optional) : array
+            The labels of input data.
+            The shape of this labels should have 2 dimension(batch, num_class).
         batch_size: int
-            The size of data to generate.
+            The size of data to generate at one batch.
         Return:
             generator
         """
         if data.ndim != 4:
             raise ValueError('Input data should have 4 dimensions.')
 
+        if label is not None:
+            if len(data) != len(label):
+                raise ValueError('Input data and label size do not much.')
+
         self.data = data
+        self.label = label
         self.batch_size = batch_size
         self.data_dim = data.ndim
         self.data_shape = data.shape
+        self.data_size = self.data_shape[0]
+        self.idx_list = None
+
+        if self.label is not None:
+            self.exist_label = True
+        else:
+            self.exist_label = False
 
         parse_dict = {}
         callback = None
@@ -134,14 +150,14 @@ class VoxelDataGenerator(object):
             elif self.rotate_axis == 'random':
                 parse_dict['rotate_axis'] = random.randint(1, 3)
             else:
-                raise ValueError('rotate axis should be 1, 2, 3 or random')
+                raise ValueError('Rotate axis should be 1, 2, 3 or random')
 
             if self.rotate_angle == 'random':
                 parse_dict['rotate_angle'] = int(np.random.uniform(-180, 180))
             elif type(self.rotate_angle) == int:
                 parse_dict['rotate_angle'] = self.rotate_angle
             else:
-                raise ValueError('rotate angle should be int or random')
+                raise ValueError('Rotate angle should be int or random')
 
         # build and return generator with specified callback function
         if callback:
@@ -151,14 +167,29 @@ class VoxelDataGenerator(object):
 
     def _return_generator(self, callback, parse_dict):
         """return generator according to callback"""
-        for i in range(self.batch_size):
-            sample_idx = np.random.randint(0, self.data_shape[0], 1)
-            target = np.copy(self.data[sample_idx])
+        self.idx_list = [i for i in range(self.data_size)]
+        np.random.shuffle(self.idx_list)
+        rp_num = self.data_size // self.batch_size
+        cnt = 0
 
-            # run callback function
-            x = callback(target, parse_dict)
+        while True:
+            target_idx = self.idx_list[cnt * self.batch_size: (cnt + 1) * self.batch_size]
+            target_data = self.data[target_idx]
+            if self.exist_label:
+                ret_label = self.label[target_idx]
 
-            yield x
+            # data augmentation by callback function
+            ret_data = np.array([callback(target_data[[i]], parse_dict)[0, ...] for i in range(self.batch_size)])
+            if cnt < rp_num - 1:
+                cnt += 1
+            elif cnt == rp_num - 1:
+                cnt = 0
+                np.random.shuffle(self.idx_list)
+
+            if self.exist_label:
+                yield ret_data, ret_label
+            else:
+                yield ret_data
 
     def _flip_data(self, data, parse_dict):
         """flip array along specified axis(x, y or z)"""

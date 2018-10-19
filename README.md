@@ -26,7 +26,7 @@ from voxel_data_generator import VoxelDataGenerator
 ```
 
 #### Create instance
-create an instance with argumentations to specify which type you want to augment by.
+create an instance with arguments to specify which type you want to augment by.
 ```
 # Some examples
 
@@ -48,7 +48,12 @@ build a generator by specifying data to be augmented and the number of data to g
 
 ```
 # you can generate 3 data until StopIteration Exception is returned.
-g = c.build(data=data, batch_size=3)
+g = c.build(data=data, batch_size=32)
+
+# you can also take labels as the second argument and pass the generator to Keras's fit_generator
+g = c.build(data=data, label=label, batch_size=32)
+model.fit_generator(g, steps_per_epoch=50, epochs=30)
+# Note: as written in VoxelDataGenerator class, it is able to take only one type of augmentations for the current specification.
 ```
 
 ## Examples
